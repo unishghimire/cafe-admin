@@ -64,6 +64,18 @@ export default function OwnerAdminPage() {
   // Menu Search inside Owner Table
   const [menuSearch, setMenuSearch] = useState("");
 
+  // Target Customer Website Host for QR generation (Wi-Fi LAN or Vercel URL)
+  const [qrBaseUrl, setQrBaseUrl] = useState("http://192.168.1.86:3000");
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+        setQrBaseUrl(`http://${hostname}:3000`);
+      }
+    }
+  }, []);
+
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (verifyOwnerPin(ownerPin)) {
@@ -546,7 +558,7 @@ export default function OwnerAdminPage() {
         {/* 4. EXCLUSIVE QR GENERATOR & PRINT HUB TAB (OWNER ONLY) */}
         {activeTab === "qr" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-stone-900/60 border border-amber-900/40 p-5 rounded-3xl backdrop-blur-xl">
               <div>
                 <div className="inline-flex items-center gap-1.5 text-amber-400 text-xs font-bold mb-1">
                   <Crown className="w-3.5 h-3.5" />
@@ -560,16 +572,61 @@ export default function OwnerAdminPage() {
 
               <button
                 onClick={() => window.print()}
-                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-colors shadow-lg shadow-amber-950/40"
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 transition-colors shadow-lg shadow-amber-950/40 shrink-0 self-start md:self-auto"
               >
                 <Printer className="w-4 h-4" />
                 <span>Print All Stands</span>
               </button>
             </div>
 
+            {/* Target Customer Base URL Configuration (for Phones scanning over Wi-Fi or Vercel) */}
+            <div className="bg-stone-900/80 border border-stone-800 p-4 rounded-2xl space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span className="text-xs font-bold text-amber-300">
+                  📱 Mobile Scan Target Address (Where the phone will open):
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setQrBaseUrl("http://192.168.1.86:3000")}
+                    className="text-[11px] bg-stone-950 hover:bg-stone-800 text-amber-400 border border-stone-800 px-2.5 py-1 rounded-lg transition-colors font-mono font-semibold"
+                  >
+                    Wi-Fi (192.168.1.86:3000)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setQrBaseUrl("https://cafe-customer.vercel.app")}
+                    className="text-[11px] bg-stone-950 hover:bg-stone-800 text-sky-400 border border-stone-800 px-2.5 py-1 rounded-lg transition-colors font-mono font-semibold"
+                  >
+                    Vercel Live
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setQrBaseUrl("http://localhost:3000")}
+                    className="text-[11px] bg-stone-950 hover:bg-stone-800 text-stone-400 border border-stone-800 px-2.5 py-1 rounded-lg transition-colors font-mono font-semibold"
+                  >
+                    Localhost
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={qrBaseUrl}
+                  onChange={(e) => setQrBaseUrl(e.target.value)}
+                  placeholder="e.g. http://192.168.1.86:3000 or https://your-cafe.vercel.app"
+                  className="flex-1 bg-stone-950 border border-amber-900/40 rounded-xl px-3 py-2 text-xs font-mono text-stone-100 outline-none focus:border-amber-500"
+                />
+                <span className="text-[11px] text-emerald-400 bg-emerald-950/80 px-2.5 py-1.5 rounded-xl border border-emerald-800 font-semibold hidden sm:inline-block">
+                  QR Active
+                </span>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {tables.map((tbl) => (
-                <TableQRCard key={tbl.id} table={tbl} />
+                <TableQRCard key={tbl.id} table={tbl} customerBaseUrl={qrBaseUrl} />
               ))}
             </div>
           </div>
