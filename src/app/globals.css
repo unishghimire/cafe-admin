@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #0e0d0b;
+    --bg-secondary: #171512;
+    --bg-card: #1f1c18;
+    --bg-elevated: #292520;
+    
+    --brand-amber: #d97706;
+    --brand-gold: #f59e0b;
+    --brand-cream: #fef3c7;
+    --brand-espresso: #451a03;
+    
+    --text-primary: #fbf8f2;
+    --text-secondary: #d1c7b7;
+    --text-muted: #9c9182;
+    
+    --border-subtle: rgba(217, 119, 6, 0.15);
+    --border-highlight: rgba(245, 158, 11, 0.35);
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #14120f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #383127;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5c4f3e;
+}
+
+/* Glassmorphism & Glow utilities */
+.glass-panel {
+  background: rgba(28, 25, 21, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(217, 119, 6, 0.25);
+  transform: translateY(-2px);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.coffee-gradient-bg {
+  background: radial-gradient(circle at 50% 0%, rgba(217, 119, 6, 0.18) 0%, rgba(14, 13, 11, 0) 70%),
+              radial-gradient(circle at 100% 100%, rgba(180, 83, 9, 0.12) 0%, rgba(14, 13, 11, 0) 60%);
+}
+
+/* Pulse animation for live order status & tables */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
