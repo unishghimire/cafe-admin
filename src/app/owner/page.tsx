@@ -68,12 +68,18 @@ export default function OwnerAdminPage() {
   const [qrBaseUrl, setQrBaseUrl] = useState("http://192.168.1.86:3000");
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hostname = window.location.hostname;
-      if (hostname !== "localhost" && hostname !== "127.0.0.1") {
-        setQrBaseUrl(`http://${hostname}:3000`);
-      }
-    }
+    // Auto-discover Network Host for 100% working QR codes on all mobile devices
+    fetch("/api/network-host")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.host) {
+          setQrBaseUrl(data.host);
+        }
+      })
+      .catch(() => {
+        // Safe fallback to detected local IPv4
+        setQrBaseUrl("http://192.168.1.86:3000");
+      });
   }, []);
 
   const handlePinSubmit = (e: React.FormEvent) => {
