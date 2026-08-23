@@ -569,7 +569,7 @@ export default function OwnerAdminPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {tables.map((tbl) => (
-                <TableQRCard key={tbl.id} table={tbl} customerBaseUrl="http://localhost:3000" />
+                <TableQRCard key={tbl.id} table={tbl} />
               ))}
             </div>
           </div>

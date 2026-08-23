@@ -24,15 +24,21 @@ interface TableQRCardProps {
 
 export const TableQRCard: React.FC<TableQRCardProps> = ({
   table,
-  customerBaseUrl = "http://localhost:3000",
+  customerBaseUrl,
 }) => {
   const { addToast } = useCafe();
   const [copied, setCopied] = useState(false);
   const [isTentModalOpen, setIsTentModalOpen] = useState(false);
 
+  // Dynamic Base URL resolving: User Prop -> Env Variable -> Fallback
+  const activeBaseUrl =
+    customerBaseUrl ||
+    process.env.NEXT_PUBLIC_CUSTOMER_URL ||
+    "http://localhost:3000";
+
   // Generate verified token for security
   const qrToken = generateTableQRToken(table.tableNumber);
-  const targetUrl = `${customerBaseUrl}/menu?table=${table.tableNumber}&token=${qrToken}`;
+  const targetUrl = `${activeBaseUrl}/menu?table=${table.tableNumber}&token=${qrToken}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(targetUrl);
